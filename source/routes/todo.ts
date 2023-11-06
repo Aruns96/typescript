@@ -1,9 +1,13 @@
 import { Router } from "express";
 import { Todo } from "../models/todo";
+import { type } from "os";
 
 const routes = Router();
 
 let todos:Todo[] = [];
+
+type RequestBody = {text:string};
+type RequestParams = {todoId:string};
 
 routes.get("/",(req,res,next)=>{
     res.status(200).json({todos:todos})
@@ -11,9 +15,10 @@ routes.get("/",(req,res,next)=>{
 
 
 routes.post("/todo",(req,res,next)=>{
+    const body =req.body as RequestBody;
     const newTodo : Todo= {
         id : new Date().toISOString(),
-        text : req.body.text,
+        text : body.text,
     }
     todos.push(newTodo)
 
@@ -22,14 +27,14 @@ routes.post("/todo",(req,res,next)=>{
 
 
 routes.delete("/todo/:todoId",(req,res,next)=>{
-
-    if(req.params.todoId === undefined){
+   const params = req.params as RequestParams
+    if(params.todoId === undefined){
         return res.status(404).json({message:"id not found"})
     }
 
     
 
-    todos = todos.filter(todoItem => todoItem.id !== req.params.todoId);
+    todos = todos.filter(todoItem => todoItem.id !== params.todoId);
 
     res.status(200).json({message:"deleted sucessfully",todos:todos});
 
@@ -37,14 +42,15 @@ routes.delete("/todo/:todoId",(req,res,next)=>{
 })
 
 routes.put("/todo/:todoId",(req,res,next)=>{
-   res.json({id:req.params.todoId})
-    if(req.params.todoId === undefined){
+    const params = req.params as RequestParams
+
+    if(params.todoId === undefined){
         return res.status(404).json({message:"id not found"})
     }
 
     
 
-    const index = todos.findIndex(todoItem => todoItem.id === req.params.todoId);
+    const index = todos.findIndex(todoItem => todoItem.id === params.todoId);
 if(index>=0){
     todos[index] = {
         id :todos[index].id,
