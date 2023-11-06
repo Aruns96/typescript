@@ -1,35 +1,12 @@
-var numArray = [];
-var stringArray = [];
-function add(num1, num2) {
-    if (typeof num1 === "number" && typeof num2 === "number") {
-        return num1 + num2;
-    }
-    if (typeof num1 === "string" && typeof num2 === "string") {
-        return num1 + " " + num2;
-    }
-    return +num1 + +num2;
-}
-function printObjVal(obj) {
-    console.log(obj.val);
-}
-var input1 = document.getElementById("num1");
-var input2 = document.getElementById("num2");
-var p = document.getElementById("result");
-var btn = document.getElementById("btn");
-btn.addEventListener("click", function () {
-    var n1 = input1.value;
-    var n2 = input2.value;
-    var ans = add(+n1, +n2);
-    numArray.push(ans);
-    var stringans = add(n1, n2);
-    stringArray.push(stringans);
-    printObjVal({ val: ans, timestamp: new Date() });
-});
-var pr = new Promise(function (resolve, reject) {
-    setTimeout(function () {
-        resolve("hello");
-    }, 1000);
-});
-pr.then(function (res) {
-    console.log(res);
-});
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const todo_1 = __importDefault(require("./routes/todo"));
+const body_parser_1 = __importDefault(require("body-parser"));
+const app = (0, express_1.default)();
+app.use(body_parser_1.default.json());
+app.use(todo_1.default);
+app.listen(3000);
